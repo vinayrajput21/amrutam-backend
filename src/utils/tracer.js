@@ -1,7 +1,7 @@
 const { NodeSDK } = require('@opentelemetry/sdk-node');
 const { getNodeAutoInstrumentations } = require('@opentelemetry/auto-instrumentations-node');
 const { OTLPTraceExporter } = require('@opentelemetry/exporter-trace-otlp-http');
-const { Resource } = require('@opentelemetry/resources');
+const { resourceFromAttributes } = require('@opentelemetry/resources');
 const { SemanticResourceAttributes } = require('@opentelemetry/semantic-conventions');
 const logger = require('./logger');
 
@@ -9,14 +9,17 @@ function setupTracing() {
   if (process.env.NODE_ENV === 'test') return;
 
   const exporter = new OTLPTraceExporter({
-    url: process.env.OTEL_EXPORTER_OTLP_TRACES_ENDPOINT || 'http://localhost:4318/v1/traces',
+    url:
+      process.env.OTEL_EXPORTER_OTLP_TRACES_ENDPOINT ||
+      'http://localhost:4318/v1/traces',
   });
 
   const sdk = new NodeSDK({
     traceExporter: exporter,
     instrumentations: [getNodeAutoInstrumentations()],
-    resource: new Resource({
-      [SemanticResourceAttributes.SERVICE_NAME]: 'amrutam-telemedicine-backend',
+    resource: resourceFromAttributes({
+      [SemanticResourceAttributes.SERVICE_NAME]:
+        'amrutam-telemedicine-backend',
     }),
   });
 
@@ -25,11 +28,15 @@ function setupTracing() {
   logger.info('OpenTelemetry tracing initialized');
 
   // Graceful shutdown
-  process.on('SIGTERM', () => {
-    sdk.shutdown()
-      .then(() => logger.info('Tracing shut down successfully'))
-      .catch((err) => logger.error('Error shutting down tracing', err))
-      .finally(() => process.exit(0));
+  process.on('SIGTERM', async () => {
+    try {
+      await sdk.shutdown();
+      logger.info('Tracing shut down successfully');
+    } catch (err) {
+      logger.error('Error shutting down tracing', err);
+    } finally {
+      process.exit(0);
+    }
   });
 }
 

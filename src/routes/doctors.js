@@ -5,7 +5,7 @@ const { setAvailability, getAvailability, searchDoctors } = require('../controll
 const auth = require('../middlewares/auth');
 const rbac = require('../middlewares/rbac');
 const validation = require('../middlewares/validation');
-const doctorSchemas = require('../schemas/doctorSchemas'); // Assume Joi schemas
+const doctorSchemas = require('../schemas/doctorSchemas');
 
 /**
  * @swagger
