@@ -6,7 +6,7 @@ const redisClient = createClient({
   url: config.redis.url,
   socket: {
     reconnectStrategy: (retries) => {
-      if (retries > 10) {
+      if (retries > 5) {
         return new Error('Max retries reached – giving up on Redis connection');
       }
       return Math.min(retries * 100, 3000); // exponential backoff

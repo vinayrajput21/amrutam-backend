@@ -12,9 +12,9 @@ async function startServer() {
     await redisClient.connect();
     logger.info('Redis connected');
     setupTracing();
-    startMetricsServer(); // For Prometheus
+    startMetricsServer(); 
 
-    const PORT = process.env.PORT || 3000;
+    const PORT = process.env.PORT || 4000;
     app.listen(PORT, () => logger.info(`Server running on port ${PORT}`));
   } catch (err) {
     logger.error('Startup error:', err);

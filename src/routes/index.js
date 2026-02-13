@@ -26,7 +26,7 @@ router.use('/admin', adminRoutes);
  *       200:
  *         description: Server is healthy
  */
-router.get('/health', (req, res) => {
+router.get('/healthcheck', (req, res) => {
   res.status(200).json({ status: 'ok', uptime: process.uptime() });
 });
 

@@ -12,7 +12,7 @@ if (config.database.url) {
     dialectOptions: {
       ssl: config.env === 'production' ? {
         require: true,
-        rejectUnauthorized: false, // depends on your hosting provider
+        rejectUnauthorized: false, 
       } : false,
     },
     pool: {
