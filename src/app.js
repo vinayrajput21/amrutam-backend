@@ -5,6 +5,7 @@ const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const routes = require('./routes');
 const errorHandler = require('./middlewares/errorHandler');
+const cors = require('cors')
 const { createContainer, asClass, asValue } = require('awilix');
 
 const container = createContainer();
@@ -22,6 +23,14 @@ container.register({
 });
 
 const app = express();
+app.use(cors({
+
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-idempotency-key'],
+  credentials: true 
+
+}));
 app.use(helmet());
 app.use(express.json());
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));

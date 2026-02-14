@@ -1,14 +1,14 @@
 const jwt = require('jsonwebtoken');
 const speakeasy = require('speakeasy');
 const User = require('../models/user');
-const { cryptoUtil } = require('../utils/cryptoUtil'); // For encryption
+const cryptoUtil = require('../utils/cryptoUtil'); // For encryption
 
 class AuthService {
   async register(userData) {
     const user = await User.create(userData);
     // Generate MFA secret
     const secret = speakeasy.generateSecret();
-    user.mfaSecret = cryptoUtil.encrypt(secret.base32); // Encrypt secret
+    user.mfaSecret = cryptoUtil.encrypt(secret.base32); 
     await user.save();
     return user;
   }
